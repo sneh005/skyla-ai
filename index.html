@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>chatbot</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <div class = "avatar-wrapper"></div>
+                <img src="aibot.png" alt="Skyla" class="header-avatar">
+                <span class="dot"></span>
+                
+
+                <h2>Skyla
+                    <br>
+                   <span>your AI Assistant</span>
+                </h2>
+                
+            </div>
+              <div class="chat-box" id="chatBox">
+                <div class="bot-container first">
+                    <img src="aibot.png" alt="Skyla" class="bot-avatar">
+                    <div class="message bot">Hi I'm Skyla</div>
+                </div>
+                
+                <div class="bot-container second">
+                    <img src="aibot.png" alt="Skyla" class="bot-avatar">
+                    <div class="message bot">How can I help you?</div>
+                </div>
+            </div>
+
+            <div class="input-area">
+                <input type="text" id="userInput" placeholder="Type your message here..." >
+                <button onclick="sendMessage()">send</button>
+        </div>
+        </div>
+        
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+        <script src="script.js"></script>
+    </body>
+</html>
