@@ -9,7 +9,8 @@ app.use(cors({ origin: "*" }));
 app.use(express.json());
 
 // ✅ Correct Gemini initialization
-const ai = new GoogleGenAI(process.env.GEMINI_API_KEY);
+const ai = new GoogleGenAI({
+    apiKey: process.env.GEMINI_API_KEY});
 
 // Test route
 app.get("/", (req, res) => {
@@ -87,7 +88,7 @@ User: ${message}
 
         // 🔥 Gemini AI response
         const model = ai.getGenerativeModel({
-            model: "gemini-1.5-flash"
+            model: "gemini-2.5-flash"
         });
 
         const result = await model.generateContent(message);
