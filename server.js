@@ -53,7 +53,7 @@ User: ${message}
 
         // 🔥 Correct syntax for the new @google/genai package
         const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash",
+            model: "gemini-2.5-flash-lite",
             contents: prompt
         });
 
@@ -68,7 +68,7 @@ User: ${message}
         console.error("Error:", error);
 
         return res.status(500).json({
-            reply: "Sorry, something went wrong."
+            reply: "Skyla is busy right now."
         });
     }
 });
