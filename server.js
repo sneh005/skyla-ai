@@ -87,16 +87,15 @@ User: ${message}
 `;
 
         // 🔥 Gemini AI response
-        const model = ai.getGenerativeModel({
-            model: "gemini-2.5-flash"
+        const response = await ai.models.generateContent({
+            model: "gemini-2.5-flash",
+            contents: prompt
         });
 
-        const result = await model.generateContent(message);
-        const response = await result.response;
-        const text = response.text();
+        const text = response.text;
 
         return res.json({
-            reply: text
+            response: text
         });
 
     } catch (error) {
