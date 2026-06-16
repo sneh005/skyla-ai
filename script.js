@@ -30,6 +30,9 @@ async function sendMessage() {
             },
             body: JSON.stringify({ message })
         });
+        if (!res.ok){
+            throw new Error(`HTTP Error: $ {res.status}`)
+        }
 
         const data = await res.json();
 
@@ -37,6 +40,7 @@ async function sendMessage() {
         botMessage.innerHTML = `<p></p>`;
 
         const p = botMessage.querySelector("p");
+        p.textContent = "";
         const text = data.reply || "";
 
         let i = 0;
@@ -55,7 +59,7 @@ async function sendMessage() {
         console.error(error);
 
         botMessage.innerHTML = `
-            <p>Sorry, something went wrong.</p>
+            <p>Sorry, Skyla is busy right now.</p>
         `;
     }
 }
