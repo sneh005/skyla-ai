@@ -12,7 +12,13 @@ i learned a lot while solving these problems.
 *Tech stack
 FRONTEND: HTML, CSS, Javascript
 BACKEND: node.js, express.js
-API: gemini
+API: Groq SDK
 
-demo:
-https://skyla-ai.vercel.app/
+*How to run:
+-clone my repository
+  https://github.com/sneh005/skyla-ai.git
+-Install dependencies:
+  npm install
+-Run: node server.js
+-Open the index.html(directly)
+
