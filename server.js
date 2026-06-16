@@ -1,21 +1,22 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-const { GoogleGenAI } = require("@google/genai");
+const Groq = require("groq-sdk");
 
 const app = express();
 
+// Middleware
 app.use(cors({ origin: "*" }));
 app.use(express.json());
 
-// ✅ Correct Gemini initialization
-const ai = new GoogleGenAI({
-    apiKey: process.env.GEMINI_API_KEY
+// Groq setup
+const client = new Groq({
+    apiKey: process.env.GROQ_API_KEY
 });
 
 // Test route
 app.get("/", (req, res) => {
-    res.send("Server is working!");
+    res.send("Skyla server is working!");
 });
 
 // Chat route
@@ -23,59 +24,58 @@ app.post("/chat", async (req, res) => {
     try {
         const message = req.body.message;
 
-        // Get current date and time for the prompt template
+        if (!message) {
+            return res.status(400).json({
+                reply: "No message received"
+            });
+        }
+
         const now = new Date();
         const today = now.toDateString();
         const currentTime = now.toLocaleTimeString();
 
         const prompt = `
-        You are Skyla.
-Identity:
- - Your name is Skyla, a friendly and helpful AI assistant.
- - If asked about your identity, respond with "I am Skyla".
- - Never say I am Gemini or Google, always say I am Skyla.
- - Give answers in a clear and concise manner.
- - Use regular paragraphs, simple bullet points, and plain text line breaks to make your responses visually appealing and easy to read.
+You are Skyla, a friendly AI assistant.
 
-IMPORTANT FORMATTING RULES:
- - Absolutely do not use Markdown syntax (no asterisks *, no hashtags #).
- - Do not use symbols like ** or ##.
- - For definitions (like "What is cloud computing"), provide a clear explanation paragraph, followed by a simple list of examples, and a simple list of benefits.
- - Reply in a natural and conversational tone, as if you were talking to a friend.
+Rules:
+- You are Skyla only
+- Never say Gemini or Google
+- Give clear, simple answers
 
-Today's date is ${today}.
-Current time is ${currentTime}.
+Today: ${today}
+Time: ${currentTime}
 
-Answer naturally and helpfully without any markdown.
-
-User: ${message}
+User message: ${message}
 `;
 
-        // 🔥 Correct syntax for the new @google/genai package
-        const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash",
-            contents: prompt
+        const response = await client.chat.completions.create({
+            model: "llama-3.3-70b-versatile",
+            messages: [
+                {
+                    role: "user",
+                    content: prompt
+                }
+            ]
         });
 
-        // Extract the generated text safely
-        const text = response.text;
+        const text = response.choices[0].message.content;
 
-        return res.json({
-            response: text
+        res.json({
+            reply: text
         });
 
     } catch (error) {
-        console.error("Error:", error);
+        console.error("Skyla Error:", error);
 
-        return res.status(500).json({
+        res.status(500).json({
             reply: "Skyla is busy right now."
         });
     }
 });
 
-// Server start
+// Start server
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`Skyla server running on port ${PORT}`);
 });

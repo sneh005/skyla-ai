@@ -6,7 +6,7 @@ async function sendMessage() {
 
     const chatBox = document.getElementById("chatBox");
 
-    // User message
+    // USER MESSAGE
     const userMessage = document.createElement("div");
     userMessage.className = "message user";
     userMessage.innerHTML = `<p>${message}</p>`;
@@ -14,52 +14,55 @@ async function sendMessage() {
 
     input.value = "";
 
-    // Bot typing indicator
+    // BOT MESSAGE (typing placeholder)
     const botMessage = document.createElement("div");
     botMessage.className = "message bot";
-    botMessage.innerHTML = `<p>Skyla is typing...</p>`;
-    chatBox.appendChild(botMessage);
 
+    const p = document.createElement("p");
+    p.textContent = "Skyla is typing...";
+    botMessage.appendChild(p);
+
+    chatBox.appendChild(botMessage);
     chatBox.scrollTop = chatBox.scrollHeight;
 
     try {
-        const res = await fetch("https://skyla-ai.onrender.com/chat", {
+        const res = await fetch("http://localhost:3000/chat", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({ message })
         });
-        if (!res.ok){
-            throw new Error(`HTTP Error: $ {res.status}`)
+
+        if (!res.ok) {
+            throw new Error(`HTTP Error: ${res.status}`);
         }
 
         const data = await res.json();
 
-        // Clear typing indicator
-        botMessage.innerHTML = `<p></p>`;
+        // Get response safely (supports both formats)
+        const text = data.reply || data.response || "No response";
 
-        const p = botMessage.querySelector("p");
+        // Clear typing text
         p.textContent = "";
-        const text = data.reply || "";
 
+        // Smooth typing effect
         let i = 0;
 
-        const typing = setInterval(() => {
+        function typeText() {
             if (i < text.length) {
                 p.textContent += text.charAt(i);
                 i++;
                 chatBox.scrollTop = chatBox.scrollHeight;
-            } else {
-                clearInterval(typing);
+                setTimeout(typeText, 15);
             }
-        }, 20);
+        }
+
+        typeText();
 
     } catch (error) {
-        console.error(error);
+        console.error("Error:", error);
 
-        botMessage.innerHTML = `
-            <p>Sorry, Skyla is busy right now.</p>
-        `;
+        p.textContent = "Sorry, Skyla is busy right now.";
     }
 }
