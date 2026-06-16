@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { GoogleGenAI } = require("@google/genai");
 
 const app = express();
 
@@ -9,7 +9,7 @@ app.use(cors({ origin: "*" }));
 app.use(express.json());
 
 // ✅ Correct Gemini initialization
-const ai = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const ai = new GoogleGenAI(process.env.GEMINI_API_KEY);
 
 // Test route
 app.get("/", (req, res) => {
