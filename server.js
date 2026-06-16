@@ -53,7 +53,7 @@ User: ${message}
 
         // 🔥 Correct syntax for the new @google/genai package
         const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash-lite",
+            model: "gemini-2.5-flash",
             contents: prompt
         });
 
