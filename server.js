@@ -10,7 +10,8 @@ app.use(express.json());
 
 // ✅ Correct Gemini initialization
 const ai = new GoogleGenAI({
-    apiKey: process.env.GEMINI_API_KEY});
+    apiKey: process.env.GEMINI_API_KEY
+});
 
 // Test route
 app.get("/", (req, res) => {
@@ -21,48 +22,12 @@ app.get("/", (req, res) => {
 app.post("/chat", async (req, res) => {
     try {
         const message = req.body.message;
-        const lowerMessage = message.toLowerCase();
 
-        console.log("User asked:", lowerMessage);
+        // Get current date and time for the prompt template
+        const now = new Date();
+        const today = now.toDateString();
+        const currentTime = now.toLocaleTimeString();
 
-        // 🔹 Identity response
-        if (
-            lowerMessage.includes("who are you") ||
-            lowerMessage.includes("what are you") ||
-            lowerMessage.includes("tell me about yourself")
-        ) {
-            return res.json({
-                reply: "Hi! I'm Skyla, your personal AI assistant."
-            });
-        }
-
-        // 🔹 Date
-        const today = new Date().toLocaleDateString("en-IN", {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric"
-        });
-
-        // 🔹 Time
-        const currentTime = new Date().toLocaleTimeString("en-IN");
-
-        if (
-            lowerMessage.includes("date") ||
-            lowerMessage.includes("today")
-        ) {
-            return res.json({
-                reply: `Today is ${today}.`
-            });
-        }
-
-        if (
-            lowerMessage.includes("time")
-        ) {
-            return res.json({
-                reply: `The current time is ${currentTime}.`
-            });
-        }
         const prompt = `
         You are Skyla.
 Identity:
@@ -86,12 +51,13 @@ Answer naturally and helpfully without any markdown.
 User: ${message}
 `;
 
-        // 🔥 Gemini AI response
+        // 🔥 Correct syntax for the new @google/genai package
         const response = await ai.models.generateContent({
             model: "gemini-2.5-flash",
             contents: prompt
         });
 
+        // Extract the generated text safely
         const text = response.text;
 
         return res.json({
@@ -113,4 +79,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
-
